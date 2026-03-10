@@ -2,8 +2,11 @@ import express from 'express'
 import { PORT } from './config.js'
 import { findacustomer, showallcustomers } from './custormers.js'
 import { getTransactions } from './customerTrans.js'
+import { addtoFaves, deleteFromFaves } from './myfaves.js'
 
 const app = express()
+
+app.use(express.json()) // Middleware to parse JSON bodies
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
@@ -15,5 +18,23 @@ app.get("/customers", (req, res) => {
 
 app.get("/transactions/:custID", (req, res) => {
     const cID = req.params.custID
+    if (isNaN(cID)) {
+        res.status(400).json({ error: "Invalid customer ID" })
+        return
+    }
     getTransactions(res, cID)
+})
+
+app.post("/customers/add/:custID", (req, res) => {
+    const cID = req.params.custID
+    if (isNaN(cID)) {
+        res.status(400).json({ error: "Invalid customer ID" })
+        return
+    }
+    addtoFaves(res, parseInt(cID))
+})
+
+app.delete ("/faves/remove", (req, res) => {
+    const data = req.body
+    deleteFromFaves(res, data.cID)
 })
