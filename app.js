@@ -2,7 +2,7 @@ import express from 'express'
 import { PORT } from './config.js'
 import { findacustomer, showallcustomers } from './custormers.js'
 import { getTransactions } from './customerTrans.js'
-import { addtoFaves, deleteFromFaves } from './myfaves.js'
+import { addtoFaves, deleteFromFaves, updateMemo } from './myfaves.js'
 
 const app = express()
 
@@ -34,7 +34,21 @@ app.post("/customers/add/:custID", (req, res) => {
     addtoFaves(res, parseInt(cID))
 })
 
-app.delete ("/faves/remove", (req, res) => {
+app.delete("/faves/remove", (req, res) => {
     const data = req.body
     deleteFromFaves(res, data.cID)
+})
+
+app.put('/memo', (req, res) => {
+    // const { fID, memo } = req.body
+   const data = req.body
+    if (!data|| !data.fID || !data.memo) {
+        res.status(400).json({ error: "Corrupted or requested missing request data" })
+        return
+    }
+    if (data.memo.length > 160) {
+        res.status(400).json({ error: "Memo exceeds 160 characters" })
+        return
+    }
+    updateMemo(res, data.fID, data.memo)
 })

@@ -42,4 +42,7 @@ const deleteFromFaves = (res, custID) => {
         })
 }
 
-export { addtoFaves, deleteFromFaves }
+const updateMemo = (res, fID, memo) => {}
+
+
+export { addtoFaves, deleteFromFaves, updateMemo }
