@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb"
 import { FavesCollection } from "./mymongo.js"
 
 const addtoFaves = (res, custID) => {
@@ -31,7 +32,7 @@ const deleteFromFaves = (res, custID) => {
             FavesCollection
                 .deleteOne({ customerID: custID })
                 .then(result => {
-                    if (result.deletedCount > 0){
+                    if (result.deletedCount > 0) {
                         res.status(200).json({ message: `Customer with ID ${custID} removed from favorites.` })
                     }
                     else {
@@ -42,7 +43,33 @@ const deleteFromFaves = (res, custID) => {
         })
 }
 
-const updateMemo = (res, fID, memo) => {}
+const updateMemo = (res, fID, theMemo) => {
+    //convert fID to ObjectID
+    fID = new ObjectId(fID)
 
+    // //verify the fID exists in the collection
+    // FavesCollection
+    //     .countDocuments({ _id: fID })
+    //     .then(counts => {
+    //         if (counts = 0) {
+    //             res.status(400).json({ "error": "Favourite ID doesnt exist" })
+    //             return
+    //         }
+    //     })
+
+    //update the memo field  with the new value
+    const query = {_id:fID}
+    const updateData = {$set:{memo: theMemo}}
+    const options = {upsert :true}
+    FavesCollection
+        .updateOne({query, data, options})
+        .then(result =>{
+            if (result.matchedCount > 0 || result.modifiedCount == 0) {
+                res.status(400).json({"error": `Update failed: ${result.matchedCount} documents found and ${result.modifiedCount} documents modified.`})
+                return
+            }
+            res.status(200).json ({message : "Message updated sucesffuly"})
+        })
+}
 
 export { addtoFaves, deleteFromFaves, updateMemo }
