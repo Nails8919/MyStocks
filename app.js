@@ -3,10 +3,12 @@ import { PORT } from './config.js'
 import { findacustomer, showallcustomers } from './custormers.js'
 import { getTransactions } from './customerTrans.js'
 import { addtoFaves, deleteFromFaves, updateMemo } from './myfaves.js'
+import cors from 'cors'
 
 const app = express()
 
 app.use(express.json()) // Middleware to parse JSON bodies
+app.use(cors()) // Enable CORS for all routes
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
