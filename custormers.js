@@ -10,7 +10,7 @@ const showallcustomers = (res) => {
                 limit: 15,
                 sort: { birthdate: -1 },
                 projection: {
-                    accounts: 0,
+                    // accounts: 1,
                     tier_and_details: 0
                 }
 
