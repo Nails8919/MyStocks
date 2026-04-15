@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import { FavesCollection } from "./mymongo.js"
 
+//add a customer to the favorites collection
 const addtoFaves = (res, custID) => {
     FavesCollection
         .countDocuments({ customerID: custID })
@@ -9,6 +10,8 @@ const addtoFaves = (res, custID) => {
                 res.status(400).json({ message: `Customer with ID ${custID} is already in favorites.` })
                 return
             }
+
+            //add the customer to the favorites collection
             FavesCollection
                 .insertOne({ customerID: custID })
                 .then(result => {
@@ -21,6 +24,7 @@ const addtoFaves = (res, custID) => {
         })
 }
 
+//delete a customer from the favorites collection
 const deleteFromFaves = (res, custID) => {
     FavesCollection
         .countDocuments({ customerID: custID })
@@ -29,6 +33,8 @@ const deleteFromFaves = (res, custID) => {
                 res.status(400).json({ message: `Customer with ID ${custID} does not exist.` })
                 return
             }
+
+            //delete the customer from the favorites collection
             FavesCollection
                 .deleteOne({ customerID: custID })
                 .then(result => {
@@ -43,6 +49,7 @@ const deleteFromFaves = (res, custID) => {
         })
 }
 
+//update the memo field of a favorite customer
 const updateMemo = (res, fID, theMemo) => {
     //convert fID to ObjectID
     fID = new ObjectId(fID)
